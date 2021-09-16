@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="favicon.ico" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+      crossorigin="anonymous"
+    ></script>
+    <title>Family Cookbook</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Jones Family Cookbook</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarText"
+          aria-controls="navbarText"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"></li>
+          </ul>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link" href="login.html">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col p-2">
+          <div class="card bg-light card-form h-100 w-100">
+            <div class="card-body">
+              <h3 class="text-center">Chicken Pot Pie</h3>
+              <p>
+                Now lets add an instruction and/or ingredient to the recipe:
+              </p>
+              <div class="form-floating" id="amount">
+                <input
+                  autocomplete="amount"
+                  type="text"
+                  name="amount"
+                  id="amount"
+                  class="form-control form-control-lg mt-2 text-primary"
+                  placeholder="Amount (1, 1/2, ect)"
+                /><label for="amount" id="amountlbl">Amount</label>
+              </div>
+              <div class="form-floating" id="unit">
+                <input
+                  autocomplete="mesurement"
+                  type="text"
+                  name="mesurement"
+                  id="mesurement"
+                  class="form-control form-control-lg mt-2 text-primary"
+                  placeholder="Measurement"
+                /><label for="mesurement" id="mesurementLbl">Measurement</label>
+              </div>
+              <div class="form-floating" id="ingredient">
+                <input
+                  autocomplete="ingredient"
+                  type="text"
+                  name="ingredient"
+                  id="ingredient"
+                  class="form-control form-control-lg mt-2 text-primary"
+                  placeholder="Ingredient"
+                /><label for="Ingredient" id="ingredientlbl">Ingredient</label>
+              </div>
+              <div class="form-floating" id="instructions">
+                <input
+                  autocomplete="instructions"
+                  type="text"
+                  name="instructions"
+                  id="instructions"
+                  class="form-control form-control-lg mt-2 text-primary"
+                  placeholder="Instructions"
+                /><label for="instructions" id="instructionslbl"
+                  >Instruction</label
+                >
+              </div>
+              <p>
+                <small
+                  >*If you are adding an ingredient you can use %I% in the
+                  instruction instead of retyping the ingredient</small
+                >
+              </p>
+              <button
+                class="btn btn-success mt-3 w-100 btn-block text-light"
+                type="button"
+              >
+                Add
+              </button>
+              <button
+                class="btn btn-outline-primary mt-3 w-100 btn-block"
+                type="button"
+                onclick='window.open("dinner.html","_self")'
+              >
+                Finish Recipe
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col p-2">
+          <div class="card bg-light card-form">
+            <div class="card-body">
+              <p>Ingredients and Instructions</p>
+              <div class="row">
+                <div class="col">Preheat oven to 350</div>
+                <div class="col">
+                  <button class="btn btn-success btn-sm text-light">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              <hr />
+              <div class="row mt-1">
+                <div class="col">Add 2 cups flour to a bowl</div>
+                <div class="col">
+                  <button class="btn btn-success btn-sm text-light">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

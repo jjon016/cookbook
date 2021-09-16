@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather&display=swap');
+
+$primary: #d88e17;
+$secondary: #a0e7e5;
+$success: #ffaebc;
+$info: #d6eadf;
+$warning: #e8db7d;
+$danger: #82204a;
+$light: #fdfdfd;
+$dark: #809bce;
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'success': $success,
+  'info': $info,
+  'warning': $warning,
+  'danger': $danger,
+  'light': $light,
+  'dark': $dark,
+);
+
+$secondaryLight: darken($secondary, 10%);
+
+@import '../node_modules/bootstrap/scss/bootstrap';
+
+html,
+body {
+  font-family: 'Merriweather', serif;
+  color: $primary;
+  height: 100%;
+  background: linear-gradient(to right top, $secondary, $secondaryLight);
+}
+
+.card-img-top {
+  height: 15rem;
+  object-fit: cover;
+}
