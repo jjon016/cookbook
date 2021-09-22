@@ -2,6 +2,8 @@ import { useState, useCallback } from 'react';
 
 const identURL = 'https://identitytoolkit.googleapis.com/v1/accounts';
 const dbURL = 'https://react-http-308cb-default-rtdb.firebaseio.com';
+const uploadURL =
+  'https://firebasestorage.googleapis.com/v0/b/react-http-308cb.appspot.com/o/';
 
 export const JSONHeader = {
   'Content-Type': 'application/json',
@@ -16,13 +18,20 @@ const useRequest = () => {
     if (requestConfig.requestType && requestConfig.requestType === 'Identity') {
       URL = identURL;
     }
+    if (requestConfig.requestType && requestConfig.requestType === 'Upload') {
+      URL = uploadURL;
+    }
     setIsLoading(true);
     setError(null);
     try {
       const response = await fetch(URL + requestConfig.url, {
         method: requestConfig.method ? requestConfig.method : 'GET',
         headers: requestConfig.headers ? requestConfig.headers : {},
-        body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
+        body: requestConfig.postBody
+          ? requestConfig.postBody
+          : requestConfig.body
+          ? JSON.stringify(requestConfig.body)
+          : null,
       });
 
       if (!response.ok) {

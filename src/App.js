@@ -13,11 +13,9 @@ function App() {
         {!authCtx.isLoggedIn && <Redirect to="/login"></Redirect>}
         {authCtx.isLoggedIn && <Redirect to="/home"></Redirect>}
       </Route>
-      {!authCtx.isLoggedIn && (
-        <Route path="/login">
-          <Login />
-        </Route>
-      )}
+      <Route path="/login">
+        <Login />
+      </Route>
       {authCtx.isLoggedIn && (
         <Route path="/home">
           <Home />

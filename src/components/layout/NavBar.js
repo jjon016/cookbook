@@ -28,38 +28,35 @@ const NavBar = (props) => {
       <div className={'collapse navbar-collapse'} id="navbarSupportedContent">
         <ul className={'navbar-nav me-auto mb-2 mb-lg-0'}>
           <li className={'nav-item dropdown'}>
-            <a
+            <div
               className={'nav-link dropdown-toggle'}
-              href="#"
               id="navbarDropdown"
               role="button"
               data-bs-toggle="dropdown"
               aria-expanded="false"
             >
               Explore
-            </a>
+            </div>
             <ul className={'dropdown-menu'} aria-labelledby="navbarDropdown">
               <li>
-                <a className={'dropdown-item'} href="#">
+                <div className={'dropdown-item'} href="#">
                   Breakfast
-                </a>
+                </div>
               </li>
               <li>
-                <a className={'dropdown-item'} href="#">
+                <div className={'dropdown-item'} href="#">
                   Lunch
-                </a>
+                </div>
               </li>
               <li>
-                <a className={'dropdown-item'} href="#">
+                <div className={'dropdown-item'} href="#">
                   Dinner
-                </a>
+                </div>
               </li>
             </ul>
           </li>
           <li className={'nav-item'}>
-            <a className={'nav-link'} href="login.html">
-              Add
-            </a>
+            <div className={'nav-link'}>Add</div>
           </li>
         </ul>
         <form className={'d-flex m-auto'}>

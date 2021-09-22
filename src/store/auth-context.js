@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
+
 let logoutTimer;
 const AuthContext = React.createContext({
   token: '',
   email: '',
+  sms: '',
+  name: '',
+  userId: '',
+  cookbooks: [],
   isLoggedIn: false,
-  login: (email, token, expirationTime) => {},
+  login: (userId, token, expirationTime) => {},
   logout: () => {},
+  setData: () => {},
 });
+
 const calRemTime = (expirationTime) => {
   const currentTime = new Date().getTime();
   const adjExpTime = new Date(expirationTime).getTime();
@@ -15,27 +22,28 @@ const calRemTime = (expirationTime) => {
 
 const retrieveStoredToken = () => {
   const initialToken = localStorage.getItem('token');
-  const email = localStorage.getItem('email');
+  const initialUserId = localStorage.getItem('userId');
   const expTime = localStorage.getItem('expTime');
   const remTime = calRemTime(expTime);
   if (remTime <= 60000) {
     localStorage.removeItem('token');
     localStorage.removeItem('expTime');
+    localStorage.removeItem('userId');
     return null;
   } else {
-    return { email: email, token: initialToken, remTime: remTime };
+    return { userId: initialUserId, token: initialToken, remTime: remTime };
   }
 };
 
 export const AuthContextProvider = (props) => {
   const localData = retrieveStoredToken();
   let initialToken;
-  let initialEmail;
+  let initialUserId;
 
   const logoutHandler = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('expTime');
-    localStorage.removeItem('email');
+    localStorage.removeItem('userId');
     setToken(null);
     if (logoutTimer) {
       clearTimeout(logoutTimer);
@@ -43,31 +51,53 @@ export const AuthContextProvider = (props) => {
   };
   if (localData) {
     initialToken = localData.token;
-    initialEmail = localData.email;
+    initialUserId = localData.userId;
     logoutTimer = setTimeout(logoutHandler, localData.remTime);
   }
-
   const [token, setToken] = useState(initialToken);
-  const [email, setEmail] = useState(initialEmail);
-
+  const [email, setEmail] = useState('');
+  const [sms, setSms] = useState('');
+  const [name, setName] = useState('');
+  const [userId, setUserId] = useState(initialUserId);
+  const [cookbooks, setCookbooks] = useState([]);
   const userIsLoggedIn = !!token;
 
-  const loginHandler = (email, token, expirationTime) => {
+  const loginHandler = (userId, token, expirationTime) => {
     setToken(token);
-    setEmail(email);
+    setUserId(userId);
     localStorage.setItem('token', token);
     localStorage.setItem('expTime', expirationTime);
-    localStorage.setItem('email', email);
+    localStorage.setItem('userId', userId);
     const remainingTime = calRemTime(expirationTime);
     logoutTimer = setTimeout(logoutHandler, remainingTime);
   };
 
+  const setDataHandler = (data) => {
+    if (data.email) {
+      setEmail(data.email);
+    }
+    if (data.sms) {
+      setSms(data.sms);
+    }
+    if (data.name) {
+      setName(data.name);
+    }
+    if (data.cookbooks) {
+      setCookbooks(data.cookbooks);
+    }
+  };
+
   const contextValue = {
-    email: email,
     token: token,
+    email: email,
+    sms: sms,
+    name: name,
+    userId: userId,
+    cookbooks: cookbooks,
     isLoggedIn: userIsLoggedIn,
     login: loginHandler,
     logout: logoutHandler,
+    setData: setDataHandler,
   };
 
   return (

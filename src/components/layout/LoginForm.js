@@ -1,14 +1,22 @@
 import useRequest, { JSONHeader } from '../../hooks/useRequest';
 import AuthContext from '../../store/auth-context';
-import { useRef, useContext } from 'react';
-import { useHistory } from 'react-router';
+import { useRef, useContext, useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const LoginForm = (props) => {
   const emailRef = useRef();
   const passRef = useRef();
   const history = useHistory();
+  const [forward, setForward] = useState(false);
   const { isLoading, error, sendRequest: sendLoginRequest } = useRequest();
   const authCtx = useContext(AuthContext);
+
+  useEffect(() => {
+    if (forward) {
+      setForward(false);
+      history.replace('/');
+    }
+  }, [forward, history]);
 
   const finishLogin = (loginData) => {
     const expirationTime = new Date(
@@ -16,11 +24,12 @@ const LoginForm = (props) => {
     );
     console.log(loginData);
     authCtx.login(
-      loginData.email,
+      loginData.localId,
       loginData.idToken,
       expirationTime.toISOString()
     );
-    history.replace('/');
+    authCtx.setData({ email: loginData.email });
+    setForward(true);
   };
 
   const onSubmitHandler = (event) => {

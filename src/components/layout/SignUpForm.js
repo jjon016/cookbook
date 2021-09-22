@@ -1,43 +1,67 @@
 import useRequest, { JSONHeader } from '../../hooks/useRequest';
 import AuthContext from '../../store/auth-context';
-import { useRef, useContext } from 'react';
-import { useHistory } from 'react-router';
+import React, { useState, useContext, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const SignUpForm = (props) => {
-  const emailRef = useRef();
-  const passRef = useRef();
-  const nameRef = useRef();
-  const history = useHistory();
+  const [pass, setPass] = useState('');
+  const [passCon, setPassCon] = useState('');
   const { isLoading, error, sendRequest: sendLoginRequest } = useRequest();
   const authCtx = useContext(AuthContext);
+  const history = useHistory();
+  const [forward, setForward] = useState(false);
 
-  const finishLogin = (loginData) => {
+  useEffect(() => {
+    if (forward) {
+      setForward(false);
+      history.replace('/');
+    }
+  }, [forward, history]);
+
+  const finishLogin = () => {
+    setForward(true);
+  };
+
+  const addUser = (loginData) => {
     const expirationTime = new Date(
       new Date().getTime() + +loginData.expiresIn * 1000
     );
     authCtx.login(
-      loginData.email,
+      loginData.localId,
       loginData.idToken,
       expirationTime.toISOString()
     );
-    history.replace('/');
+    sendLoginRequest(
+      {
+        url: '/users/' + loginData.localId + '.json?auth=' + loginData.idToken,
+        method: 'PUT',
+        headers: JSONHeader,
+        body: {
+          email: authCtx.email,
+          sms: authCtx.sms,
+          name: authCtx.name,
+          cookbooks: authCtx.cookbooks,
+        },
+      },
+      finishLogin
+    );
   };
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    const name = nameRef.current.value.trim();
-    const email = emailRef.current.value.trim();
-    const password = passRef.current.value.trim();
-    if (name === '') {
-      nameRef.current.focus();
+    if (authCtx.name === '') {
       return;
     }
-    if (email === '') {
-      emailRef.current.focus();
+    if (authCtx.email === '') {
       return;
     }
-    if (password === '') {
-      passRef.current.focus();
+    if (pass === '') {
+      return;
+    }
+    if (pass === '') {
+      return;
+    }
+    if (passCon !== pass) {
       return;
     }
     sendLoginRequest(
@@ -46,9 +70,9 @@ const SignUpForm = (props) => {
         requestType: 'Identity',
         method: 'POST',
         headers: JSONHeader,
-        body: { email: email, password: password, returnSecureToken: true },
+        body: { email: authCtx.email, password: pass, returnSecureToken: true },
       },
-      finishLogin
+      addUser
     );
   };
 
@@ -60,8 +84,8 @@ const SignUpForm = (props) => {
           <div className={'form-floating'}>
             <input
               type="text"
-              id="name"
-              ref={nameRef}
+              value={authCtx.name}
+              onChange={(e) => authCtx.setData({ name: e.target.value })}
               className={'form-control form-control-lg mt-2'}
             />
             <label htmlFor="name">Name</label>
@@ -69,20 +93,41 @@ const SignUpForm = (props) => {
           <div className={'form-floating'}>
             <input
               type="email"
-              id="email"
-              ref={emailRef}
+              value={authCtx.email}
+              onChange={(e) =>
+                authCtx.setData({ email: e.target.value.trim() })
+              }
               className={'form-control form-control-lg mt-2'}
             />
             <label htmlFor="email">Email</label>
           </div>
           <div className={'form-floating'}>
             <input
+              type="tel"
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+              value={authCtx.sms}
+              onChange={(e) => authCtx.setData({ sms: e.target.value.trim() })}
+              className={'form-control form-control-lg mt-2'}
+            />
+            <label htmlFor="sms">Text Message Number</label>
+          </div>
+          <div className={'form-floating'}>
+            <input
               type="password"
-              id="password"
-              ref={passRef}
+              value={pass}
+              onChange={(e) => setPass(e.target.value)}
               className={'form-control form-control-lg mt-2'}
             />
             <label htmlFor="password">Password</label>
+          </div>
+          <div className={'form-floating'}>
+            <input
+              type="password"
+              value={passCon}
+              onChange={(e) => setPassCon(e.target.value)}
+              className={'form-control form-control-lg mt-2'}
+            />
+            <label htmlFor="confirmPassword">Confirm Password</label>
           </div>
           {error && (
             <div className={'text-center mt-2 text-danger'}>{error}</div>
@@ -99,9 +144,9 @@ const SignUpForm = (props) => {
           </div>
         </form>
         <div className={'card-footer bg-transparent'}>
-          <a onClick={props.showLogin} className={'btn text-dark'}>
+          <div onClick={props.showLogin} className={'btn text-dark'}>
             Already have an account? Click Here
-          </a>
+          </div>
         </div>
       </div>
     </div>

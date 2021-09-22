@@ -2,13 +2,29 @@ import useRequest, { JSONHeader } from '../../hooks/useRequest';
 import AuthContext from '../../store/auth-context';
 import { useRef, useContext } from 'react';
 
-const NoCookBook = () => {
+const NoCookbook = () => {
   const nameRef = useRef();
-  const { isLoading, error, sendRequest: createCookBook } = useRequest();
+  const { isLoading, error, sendRequest } = useRequest();
   const authCtx = useContext(AuthContext);
 
-  const cookBookResponseHandler = (responseData) => {
-    console.log(responseData);
+  const doneAddingCookbookHandler = (responseData) => {
+    authCtx.setData({ cookbooks: responseData });
+  };
+
+  const cookbookResponseHandler = (responseData) => {
+    let cookbooks = authCtx.cookbooks;
+    cookbooks.push(responseData.name);
+    sendRequest(
+      {
+        url: '/users/' + authCtx.userId + '/.json?auth=' + authCtx.token,
+        method: 'PATCH',
+        headers: JSONHeader,
+        body: {
+          cookbooks: cookbooks,
+        },
+      },
+      doneAddingCookbookHandler
+    );
   };
 
   const onSubmitHandler = (event) => {
@@ -18,14 +34,18 @@ const NoCookBook = () => {
       nameRef.current.focus();
       return;
     }
-    createCookBook(
+    sendRequest(
       {
         url: '/cookbooks.json?auth=' + authCtx.token,
         method: 'POST',
         headers: JSONHeader,
-        body: { email: authCtx.email, cookbook: name },
+        body: {
+          name: name,
+          created: new Date().toDateString(),
+          owner: authCtx.name,
+        },
       },
-      cookBookResponseHandler
+      cookbookResponseHandler
     );
   };
   return (
@@ -36,10 +56,10 @@ const NoCookBook = () => {
             <h3 className={'text-center'}>Welcome!</h3>
             <p>
               We are happy you have decided to join our family. We are dedicated
-              to providing a site where family members can easly access their
-              favorite recipes and share them with other family members. To get
-              started, please enter your family name below and lets create your
-              family cookbook!
+              to providing a site where users can easly access their favorite
+              recipes and share them with family and friends. To get started,
+              please enter your family name below and let's create your family
+              cookbook!
             </p>
             <div className={'form-floating'}>
               <input
@@ -70,4 +90,4 @@ const NoCookBook = () => {
     </div>
   );
 };
-export default NoCookBook;
+export default NoCookbook;
